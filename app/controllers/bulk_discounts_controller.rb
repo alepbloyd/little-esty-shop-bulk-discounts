@@ -30,6 +30,23 @@ class BulkDiscountsController < ApplicationController
   end
 
   def edit
+    @bulk_discount = BulkDiscount.find(params[:id])
+  end
+
+  def update
+    @bulk_discount = BulkDiscount.find(params[:id])
+
+    if bulk_discount_params[:percent_discount].to_i > 100
+
+      redirect_to edit_merchant_bulk_discount_path(@bulk_discount.merchant,@bulk_discount), notice: "Please enter a number under 100 for percentage"
+
+    else
+
+      @bulk_discount.update(percent_discount: bulk_discount_params[:percent_discount], quantity_threshold: bulk_discount_params[:quantity_threshold])
+
+      redirect_to merchant_bulk_discount_path(@bulk_discount.merchant,@bulk_discount)
+
+    end
   end
 
   def destroy
