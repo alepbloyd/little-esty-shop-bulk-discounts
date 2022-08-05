@@ -27,7 +27,13 @@ class BulkDiscountsController < ApplicationController
 
       redirect_to merchant_bulk_discounts_path(bulk_discount_params[:merchant_id]), notice: "New discount created!"
     end
+  end
 
+  def destroy
+    bulk_discount = BulkDiscount.find(params[:id])
+    bulk_discount.destroy
+
+    redirect_to merchant_bulk_discounts_path(params[:merchant_id]), notice: "Discount deleted!"
   end
 
   private
