@@ -14,6 +14,9 @@
       <p>
         <%= link_to "View Bulk Discount Details", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", class: "bulk-discount-show-link"%>
       </p>
+      <p>
+        <%= link_to "Delete Discount", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", method: :delete, class: "bulk-discount-delete-link"%>
+      </p>
     </div>
   <% end %>
 </div>

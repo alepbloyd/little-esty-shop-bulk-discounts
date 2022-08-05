@@ -62,15 +62,31 @@ RSpec.describe 'merchant bulk discount index' do
 
     expect(current_path).to eq(new_merchant_bulk_discount_path(merchant1))
   end
+
+  it 'has a link next to each bulk discount, and when clicked, user is redirected back to the bulk discount index page and the deleted discount is not listed' do
+    merchant1 = Merchant.create!(name: "Snake Shop")
+
+      bulk_discount1 = BulkDiscount.create!(percent_discount: 10, quantity_threshold: 5, merchant_id: merchant1.id)
+      bulk_discount2 = BulkDiscount.create!(percent_discount: 20, quantity_threshold: 10, merchant_id: merchant1.id)
+      bulk_discount3 = BulkDiscount.create!(percent_discount: 30, quantity_threshold: 15, merchant_id: merchant1.id)
+
+    visit merchant_bulk_discounts_path(merchant1.id)
+
+    within "#bulk-discount-#{bulk_discount1.id}" do
+      click_on "Delete Discount"
+    end
+
+    expect(current_path).to eq(merchant_bulk_discounts_path(merchant1.id))
+
+    expect(page).to_not have_content("Percent Discount: 10%")
+    expect(page).to_not have_content("Quantity Threshold: 5")
+
+    expect(page).to have_content("Percent Discount: 20%")
+    expect(page).to have_content("Quantity Threshold: 10")
+
+    expect(page).to have_content("Percent Discount: 30%")
+    expect(page).to have_content("Quantity Threshold: 15")
+
+    expect(page).to have_content("Discount deleted!")
+  end
 end
-
-# Merchant Bulk Discount Create
-
-# As a merchant
-# When I visit my bulk discounts index
-# Then I see a link to create a new discount
-# When I click this link
-# Then I am taken to a new page where I see a form to add a new bulk discount
-# When I fill in the form with valid data
-# Then I am redirected back to the bulk discount index
-# And I see my new bulk discount listed
