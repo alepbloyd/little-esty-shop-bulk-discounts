@@ -238,5 +238,17 @@ RSpec.describe 'Dashboard Page' do
       expect(page).to_not have_content(giovanni.first_name)
     end
   end
-end
 
+  it 'has link to view all bulk discounts' do
+    merchant1 = Merchant.create!(name: "Snake Shop")
+
+    visit merchant_path(merchant1.id) 
+
+    within "#merchant-links" do
+      click_on "Bulk Discounts"
+    end
+
+    expect(current_path).to eq(merchant_bulk_discounts_path(merchant1.id))
+  end
+
+end
