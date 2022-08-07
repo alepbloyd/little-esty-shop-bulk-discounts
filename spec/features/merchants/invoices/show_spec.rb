@@ -132,7 +132,7 @@ RSpec.describe 'merchant_invoices show page' do
 
   end
 
-  xit 'displays the total revenue for the merchant from this invoice, including bulk discounts in the calculation' do
+  it 'displays the total revenue for the merchant from this invoice, including bulk discounts in the calculation' do
     merchant1 = Merchant.create!(name: "Snake Shop")
       bulk_discount1 = BulkDiscount.create!(percent_discount: 10, quantity_threshold: 10, merchant_id: merchant1.id)
       bulk_discount2 = BulkDiscount.create!(percent_discount: 50, quantity_threshold: 50, merchant_id: merchant1.id)
@@ -151,8 +151,6 @@ RSpec.describe 'merchant_invoices show page' do
 
       transaction1 = Transaction.create!(invoice_id: invoice1.id, credit_card_number: 2222_3333_4444_5555, credit_card_expiration_date: "05-19-1992", result: 1) # successful
     
-      require 'pry'; binding.pry 
-
     visit merchant_invoice_path(merchant1.id, invoice1.id)
 
     within "#after-discounts" do

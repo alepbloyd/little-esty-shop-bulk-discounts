@@ -26,5 +26,14 @@ class Invoice < ApplicationRecord
   def total_revenue
     invoice_items.sum('quantity * unit_price')
   end
+
+  def total_after_discounts
+    total = 0
+    invoice_items.each do |invoice_item|
+      total += invoice_item.revenue_after_discount
+    end
+    total
+    #maybe refactor into ActiveRecord
+  end
 end
 
