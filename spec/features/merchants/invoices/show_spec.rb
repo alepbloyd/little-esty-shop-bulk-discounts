@@ -156,13 +156,38 @@ RSpec.describe 'merchant_invoices show page' do
     within "#after-discounts" do
       expect(page).to have_content("After Discounts: $260.00")
     end
+  end
 
+  it 'has link next to each invoice item, taking user to the bulk discount that was applied (if any)' do
+    merchant1 = Merchant.create!(name: "Snake Shop")
+      bulk_discount1 = BulkDiscount.create!(percent_discount: 10, quantity_threshold: 10, merchant_id: merchant1.id)
+      bulk_discount2 = BulkDiscount.create!(percent_discount: 50, quantity_threshold: 50, merchant_id: merchant1.id)
+      bulk_discount3 = BulkDiscount.create!(percent_discount: 90, quantity_threshold: 90, merchant_id: merchant1.id)
+
+    customer = Customer.create!(first_name: "Alep", last_name: "Bloyd")
+
+    item1_merchant1 = Item.create!(name: "Snake Pants", description: "It is just a sock.", unit_price: 400, merchant_id: merchant1.id)
+    item2_merchant1 = Item.create!(name: "Stinky Bits", description: "Nondescript floaty chunks.", unit_price: 200, merchant_id: merchant1.id)
+    item3_merchant1 = Item.create!(name: "Fur Ball", description: "Ew pretty nasty!", unit_price: 1000, merchant_id: merchant1.id)
+    item4_merchant1 = Item.create!(name: "Fur Ball", description: "Ew pretty nasty!", unit_price: 1000, merchant_id: merchant1.id)
+
+    invoice1 = Invoice.create!(customer_id: customer.id, status: 2) # 135 + 75 + 50
+      invoiceitem1_item1_invoice1 = InvoiceItem.create!(item_id: item1_merchant1.id, invoice_id: invoice1.id, quantity: 15, unit_price: 10, status: 1) # bulk_discount1
+      invoiceitem2_item2_invoice1 = InvoiceItem.create!(item_id: item2_merchant1.id, invoice_id: invoice1.id, quantity: 50, unit_price: 3, status: 1) # bulk_discount2
+      invoiceitem3_item3_invoice1 = InvoiceItem.create!(item_id: item3_merchant1.id, invoice_id: invoice1.id, quantity: 100, unit_price: 5, status: 1) # bulk_discount3
+      invoiceitem4_item3_invoice1 = InvoiceItem.create!(item_id: item4_merchant1.id, invoice_id: invoice1.id, quantity: 5, unit_price: 5, status: 1) # NO BULK DISCOUNT
+
+      transaction1 = Transaction.create!(invoice_id: invoice1.id, credit_card_number: 2222_3333_4444_5555, credit_card_expiration_date: "05-19-1992", result: 1) # successful
+      
+    visit merchant_invoice_path(merchant1.id, invoice1.id)
+    
+    within "#invoice-item-#{invoiceitem1_item1_invoice1.id}" do
+      expect(page).to have_content("Bulk Discount Applied")
+      click_on "Bulk Discount Applied"
+    end
+
+
+    expect(current_path).to eq("/merchants/#{merchant1.id}/bulk_discounts/#{bulk_discount1.id}")
   end
 
 end
-
-
-# As a merchant
-# // When I visit my merchant invoice show page
-# //Then I see the total revenue for my merchant from this invoice (not including discounts)
-# And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
