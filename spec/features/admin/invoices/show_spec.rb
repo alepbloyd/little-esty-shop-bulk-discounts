@@ -58,14 +58,14 @@ RSpec.describe 'admin invoices show page' do
     within "#invoice-item-#{@invoice_item1.id}" do
       expect(page).to have_content("Item Name: #{@invoice_item1.item.name}")
       expect(page).to have_content("Quantity: #{@invoice_item1.quantity}")
-      expect(page).to have_content("Price: #{@invoice_item1.unit_price}")
+      expect(page).to have_content("Price: $8.00")
       expect(page).to have_content("Status: #{@invoice_item1.status}")
     end
 
     within "#invoice-item-#{@invoice_item2.id}" do
       expect(page).to have_content("Item Name: #{@invoice_item2.item.name}")
       expect(page).to have_content("Quantity: #{@invoice_item2.quantity}")
-      expect(page).to have_content("Price: #{@invoice_item2.unit_price}")
+      expect(page).to have_content("Price: $5.00")
       expect(page).to have_content("Status: #{@invoice_item2.status}")
     end
   end
@@ -74,7 +74,7 @@ RSpec.describe 'admin invoices show page' do
     visit "/admin/invoices/#{@invoice1.id}"
 
     within '#total-revenue' do
-      expect(page).to have_content('Total Revenue: 26')
+      expect(page).to have_content('Total Revenue: $26.00')
     end
   end
 
@@ -89,5 +89,31 @@ RSpec.describe 'admin invoices show page' do
 
       expect(page).to have_content('cancelled')
     end
+  end
+
+  it 'displays the total revenue from this invoice (not including discounts) and the total discounted revenue from this invoice (which includes bulk discounts in the calculation' do
+    merchant1 = Merchant.create!(name: "Snake Shop")
+      bulk_discount1 = BulkDiscount.create!(percent_discount: 10, quantity_threshold: 10, merchant_id: merchant1.id)
+      bulk_discount2 = BulkDiscount.create!(percent_discount: 50, quantity_threshold: 50, merchant_id: merchant1.id)
+      bulk_discount3 = BulkDiscount.create!(percent_discount: 90, quantity_threshold: 90, merchant_id: merchant1.id)
+
+    customer = Customer.create!(first_name: "Alep", last_name: "Bloyd")
+
+    item1_merchant1 = Item.create!(name: "Snake Pants", description: "It is just a sock.", unit_price: 400, merchant_id: merchant1.id)
+    item2_merchant1 = Item.create!(name: "Stinky Bits", description: "Nondescript floaty chunks.", unit_price: 200, merchant_id: merchant1.id)
+    item3_merchant1 = Item.create!(name: "Fur Ball", description: "Ew pretty nasty!", unit_price: 1000, merchant_id: merchant1.id)
+    item4_merchant1 = Item.create!(name: "Fur Ball", description: "Ew pretty nasty!", unit_price: 1000, merchant_id: merchant1.id)
+
+    invoice1 = Invoice.create!(customer_id: customer.id, status: 2) # 135 + 75 + 50
+      invoiceitem1_item1_invoice1 = InvoiceItem.create!(item_id: item1_merchant1.id, invoice_id: invoice1.id, quantity: 15, unit_price: 10, status: 1) # bulk_discount1
+      invoiceitem2_item2_invoice1 = InvoiceItem.create!(item_id: item2_merchant1.id, invoice_id: invoice1.id, quantity: 50, unit_price: 3, status: 1) # bulk_discount2
+      invoiceitem3_item3_invoice1 = InvoiceItem.create!(item_id: item3_merchant1.id, invoice_id: invoice1.id, quantity: 100, unit_price: 5, status: 1) # bulk_discount3
+      invoiceitem4_item3_invoice1 = InvoiceItem.create!(item_id: item4_merchant1.id, invoice_id: invoice1.id, quantity: 5, unit_price: 5, status: 1) # NO BULK DISCOUNT
+
+      transaction1 = Transaction.create!(invoice_id: invoice1.id, credit_card_number: 2222_3333_4444_5555, credit_card_expiration_date: "05-19-1992", result: 1)
+
+    visit "/admin/invoices/#{invoice1.id}"
+
+    expect(page).to have_content("Revenue After Discounts: $285.00")
   end
 end
