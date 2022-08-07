@@ -10,6 +10,23 @@ class InvoiceItem < ApplicationRecord
     quantity * unit_price
   end
 
+  def potential_discounts
+    self.bulk_discounts
+  end
+
+  def discounts_percent_desc
+    self.potential_discounts
+        .order(percent_discount: :desc)
+  end
+
+  def applicable_discount_quantity?(bulk_discount)
+    self.quantity >= bulk_discount.quantity_threshold
+  end
+
+  def best_discount
+    discounts_percent_desc.find {|discount| self.applicable_discount_quantity?(discount)}
+  end
+
   def applied_discount
     # get all the merchant's discounts, compare the quantity threshold against the quantity on this invoiceitem, then multiply the total_revenue by the corresponding perecent discount
 
