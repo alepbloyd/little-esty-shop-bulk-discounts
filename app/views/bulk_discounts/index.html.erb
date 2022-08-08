@@ -1,5 +1,30 @@
 <h1> merchant bulk discount index </h1>
 
+<div id="upcoming-holiday-1">
+  <p>
+    Next Holiday Name: <%=@holiday_search.next_holiday_one.name%>
+  </p>
+  <p>
+    Next Holiday Date: <%=@holiday_search.next_holiday_one.date%>
+  </p>
+</div>
+<div id="upcoming-holiday-2">
+  <p>
+    Next Holiday Name: <%=@holiday_search.next_holiday_two.name%>
+  </p>
+  <p>
+    Next Holiday Date: <%=@holiday_search.next_holiday_two.date%>
+  </p>
+</div>
+<div id="upcoming-holiday-3">
+  <p>
+    Next Holiday Name: <%=@holiday_search.next_holiday_three.name%>
+  </p>
+  <p>
+    Next Holiday Date: <%=@holiday_search.next_holiday_three.date%>
+  </p>
+</div>
+
 <%= link_to "Create New Bulk Discount", new_merchant_bulk_discount_path(@merchant), class: "new-bulk-discount-link" %>
 
 <div id="bulk-discount-list">
