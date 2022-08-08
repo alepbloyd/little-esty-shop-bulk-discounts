@@ -89,4 +89,27 @@ RSpec.describe 'merchant bulk discount index' do
 
     expect(page).to have_content("Discount deleted!")
   end
+
+  it 'displays the name and date of the next 3 upcoming US holidays' do
+    merchant1 = Merchant.create!(name: "Snake Shop")
+
+      bulk_discount1 = BulkDiscount.create!(percent_discount: 10, quantity_threshold: 5, merchant_id: merchant1.id)
+      bulk_discount2 = BulkDiscount.create!(percent_discount: 20, quantity_threshold: 10, merchant_id: merchant1.id)
+      bulk_discount3 = BulkDiscount.create!(percent_discount: 30, quantity_threshold: 15, merchant_id: merchant1.id)
+
+    visit merchant_bulk_discounts_path(merchant1.id)
+    
+    within "#upcoming-holiday-1" do
+      expect(page).to have_content("Labor Day")
+      expect(page).to have_content("2022-09-05")
+    end
+    within "#upcoming-holiday-2" do
+      expect(page).to have_content("Indigenous Peoples' Day")
+      expect(page).to have_content("2022-10-10")
+    end
+    within "#upcoming-holiday-3" do
+      expect(page).to have_content("Veterans Day")
+      expect(page).to have_content("2022-11-11")
+    end
+  end
 end
