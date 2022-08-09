@@ -1,25 +1,48 @@
-<header id="admin-header"><h1>Admin Dashboard</h1></header> 
-
-<div id="admin-links">
-  <p><%= link_to 'Merchants', '/admin/merchants' %></p>
-  <p><%= link_to 'Invoices', '/admin/invoices' %></p>
+<div id="page-banner">
+  <div id="page-details">
+    Admin Dashboard
+  </div>
+  <div id="admin-links">
+    <%= link_to 'Merchants', '/admin/merchants', class: "dashboard-link" %>
+    <%= link_to 'Invoices', '/admin/invoices', class: "invoices-link" %>
+  </div>
 </div>
 
-<div id="top-customers">
-  <h2>Top Customers</h2>
-  <% Customer.top_customers.each_with_index do |customer, index| %>
-    <div id="customer-<%= index + 1%>">
-        <p><%= customer.first_name %> <%= customer.last_name %>, Successful Transactions: <%= customer.transaction_total %></p>
+<div id="dashboard-content">
+  <div id="dashboard-content-left">
+    <div class="content-column-title">
+      Incomplete Invoices
     </div>
-  <% end %>
-</div>
 
-<div id="incomplete-invoices">
-  <h2>Incomplete Invoices</h2>
-  <% Invoice.invoices_with_items_not_shipped.each do |invoice| %>
-    <p>
-      <%= link_to "Invoice ##{invoice.id}", admin_invoice_path(invoice.id) %>
-      <%= invoice.formatted_date %>
-    </p>
-  <% end %>
+    <div class="content-column-main">
+      <div id="incomplete-invoices">
+        <% Invoice.invoices_with_items_not_shipped.each do |invoice| %>
+          <p>
+            <%= link_to "Invoice ##{invoice.id}", admin_invoice_path(invoice.id) %>
+            <%= invoice.formatted_date %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboard-content-right">
+    <div class="content-column-title">
+      Top Customers
+    </div>
+
+    <div class="content-column-main">
+      <ol>
+        <% Customer.top_customers.each_with_index do |customer, index| %>
+          <div id="customer-<%= index + 1%>">
+            <li class="favorite-customer">
+              <%= customer.first_name %> <%= customer.last_name %>, Successful Transactions: <%= customer.transaction_total %>
+            </li>
+          </div>
+        <% end %>
+      </ol>
+    </div>
+
+  </div>
+
 </div>

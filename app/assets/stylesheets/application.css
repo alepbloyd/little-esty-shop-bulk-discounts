@@ -51,6 +51,10 @@ html, body{
   display: flex;
 }
 
+#admin-links {
+  display: flex;
+}
+
 #merchant-details {
   font-size: x-large;
 }
