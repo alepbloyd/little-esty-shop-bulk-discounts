@@ -6,18 +6,14 @@ class HolidaySearch
     end
   end
 
-  def next_holiday_one
-    holiday_information[0]
+  def holiday(soonness_index)
+    holiday_information[soonness_index]
   end
 
-  def next_holiday_two
-    holiday_information[1]
+  def holiday_count
+    holiday_information.count
   end
 
-  def next_holiday_three
-    holiday_information[2]
-  end
-  
   def service
     HolidayCalendarService.new
   end

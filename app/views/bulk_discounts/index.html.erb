@@ -1,47 +1,66 @@
-<h1> merchant bulk discount index </h1>
+<div id="page-banner">
+  <div id="page-details">
+    <%=@merchant.name%>
+  </div>
 
-<div id="upcoming-holiday-1">
-  <p>
-    Next Holiday Name: <%=@holiday_search.next_holiday_one.name%>
-  </p>
-  <p>
-    Next Holiday Date: <%=@holiday_search.next_holiday_one.date%>
-  </p>
-</div>
-<div id="upcoming-holiday-2">
-  <p>
-    Next Holiday Name: <%=@holiday_search.next_holiday_two.name%>
-  </p>
-  <p>
-    Next Holiday Date: <%=@holiday_search.next_holiday_two.date%>
-  </p>
-</div>
-<div id="upcoming-holiday-3">
-  <p>
-    Next Holiday Name: <%=@holiday_search.next_holiday_three.name%>
-  </p>
-  <p>
-    Next Holiday Date: <%=@holiday_search.next_holiday_three.date%>
-  </p>
+  <div id="merchant-links">
+    <%= link_to "Dashboard", "/merchants/#{@merchant.id}", class: "dashboard-link"%>
+    <%= link_to 'My Items', "/merchants/#{@merchant.id}/items",class: "items-link" %>
+    <%= link_to 'My Invoices', "/merchants/#{@merchant.id}/invoices",class: "invoices-link" %>
+    <%= link_to 'Bulk Discounts', "/merchants/#{@merchant.id}/bulk_discounts",class: "bulk-discount-link"%>
+  </div>
 </div>
 
-<%= link_to "Create New Bulk Discount", new_merchant_bulk_discount_path(@merchant), class: "new-bulk-discount-link" %>
-
-<div id="bulk-discount-list">
-  <% @merchant.bulk_discounts.each do |discount| %>
-    <div id="bulk-discount-<%=discount.id%>">
-      <p>
-        Percent Discount: <%=discount.percent_discount%>%
-      </p>
-      <p>
-        Quantity Threshold: <%=discount.quantity_threshold%>
-      </p>
-      <p>
-        <%= link_to "View Bulk Discount Details", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", class: "bulk-discount-show-link"%>
-      </p>
-      <p>
-        <%= link_to "Delete Discount", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", method: :delete, class: "bulk-discount-delete-link"%>
-      </p>
+<div id="dashboard-content">
+  <div id="dashboard-content-left">
+    <div class="content-column-title">
+      Bulk Discounts
     </div>
-  <% end %>
+
+    <%= link_to "Create New Bulk Discount", new_merchant_bulk_discount_path(@merchant), class:"new-discount-button"%>
+
+    <div class="content-column-main">
+
+      <div id="bulk-discount-list">
+        <% @merchant.bulk_discounts.each do |discount| %>
+          <div class="bulk-discount">
+            <div id="bulk-discount-<%=discount.id%>">
+              <p>
+                Percent Discount: <%=discount.percent_discount%>%
+              </p>
+              <p>
+                Quantity Threshold: <%=discount.quantity_threshold%>
+              </p>
+                <%= link_to "Details", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", class: "bulk-discount-show-button"%>
+
+                <%= link_to "Delete", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", method: :delete, class: "bulk-discount-delete-button"%>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboard-content-right">
+    <div class="content-column-title">
+      Upcoming Holidays
+    </div>
+    <table id="upcoming-holidays-table">
+      <tr>
+        <th>Order</th>
+        <th>Name</th>
+        <th>Date</th>
+      </tr>
+    <%@holiday_search.holiday_information.each_with_index do |holiday,index|%>
+      <tr id="upcoming-holiday-<%=index+1%>">
+        <td><%=index+1%></td>
+        <td><%=holiday.name%></td>
+        <td><%=holiday.date%></td>
+      </tr>
+    <% end %>
+    </table>
+  </div>
 </div>
+
+
+

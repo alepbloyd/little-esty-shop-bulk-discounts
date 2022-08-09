@@ -196,6 +196,19 @@ html, body{
   background-color: #bc43cc;
 }
 
+.bulk-discount-link {
+  background-color: #a10b4e;
+  color: #E1E2E1;
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  margin: 4px;
+}
+
+.bulk-discount-link:hover {
+  background-color: #b63e74;
+}
+
 .dashboard-content-left-subtitle {
   font-size: large;
   font-weight: bold;
@@ -293,4 +306,80 @@ html, body{
 
 #invoice-item-table tr:nth-child(even){
   background-color: #dbe4e1;
+}
+
+#upcoming-holidays-table {
+  margin-top: 40px;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#upcoming-holidays-table th{
+  text-align: center;
+  background-color: rgb(221, 217, 217);
+  border: 1px solid black;
+  padding: 5px;
+}
+
+#upcoming-holidays-table td{
+  text-align: center;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+#upcoming-holidays-table tr:nth-child(even){
+  background-color: #dbe4e1;
+}
+
+.new-discount-button {
+  background-color: #038596;
+  color: #E1E2E1;
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  max-width: fit-content;
+  margin: 5px;
+  margin-bottom: 30px;
+}
+
+.new-discount-button:hover {
+  background-color: #259eae;
+}
+
+.bulk-discount-show-button {
+  background-color: #038596;
+  color: #E1E2E1;
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  max-width: fit-content;
+  margin: 5px;
+  margin-bottom: 30px;
+}
+
+.bulk-discount-show-button:hover {
+  background-color: #259eae;
+}
+.bulk-discount-delete-button {
+  background-color: #ac242d;
+  color: #E1E2E1;
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  max-width: fit-content;
+  margin: 5px;
+  margin-bottom: 30px;
+}
+
+.bulk-discount-delete-button:hover {
+  background-color: #c6565e;
+}
+
+.bulk-discount {
+  background-color: #ceeff4;
+  border-radius: 10px;
+  border: 1px solid black;
+  padding: 10px;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
 }
