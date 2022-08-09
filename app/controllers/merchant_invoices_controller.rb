@@ -12,7 +12,8 @@ class MerchantInvoicesController < ApplicationController
     merchant = Merchant.find(params[:merchant_id])
     invoice = Invoice.find(params[:id])
     invoice_item = InvoiceItem.find(params[:invoice_item_id])
-    invoice_item.update!(invoice_item_params)
+    
+    invoice_item.update!(status: invoice_item_params[:status].downcase)
 
     redirect_to "/merchants/#{merchant.id}/invoices/#{invoice.id}"
   end

@@ -18,12 +18,14 @@ RSpec.describe 'merchant_invoices show page' do
 
       visit merchant_invoice_path(merch1.id, invoice1.id)
 
-      within('#invoice-details') do
-        expect(page).to have_content("ID: #{invoice1.id}")
-        expect(page).to have_content("Status: #{invoice1.status}")
-        expect(page).to have_content("Created: #{invoice1.formatted_date}")
-        expect(page).to have_content("Customer: #{invoice1.customer_name}")
-        expect(page).to_not have_content("ID: #{invoice2.id}")
+      within '#invoice-attributes' do
+        expect(page).to have_content("#{invoice1.status.titleize}")
+        expect(page).to have_content("#{invoice1.formatted_date}")
+        expect(page).to_not have_content("#{invoice2.id}")
+      end
+
+      within "#customer-attributes" do
+        expect(page).to have_content("#{invoice1.customer_name}")
       end
   end
 
@@ -44,12 +46,12 @@ RSpec.describe 'merchant_invoices show page' do
 
       visit merchant_invoice_path(merch1.id, invoice1.id)
 
-      within "#invoice-item-information" do
-        expect(page).to have_content("Item Name: #{invoice_item1.item.name}")
-        expect(page).to have_content("Quantity Ordered: #{invoice_item1.quantity}")
-        expect(page).to have_content("Price: $6.00")
-        expect(page).to have_content("Status: #{invoice_item1.status}")
-        expect(page).to_not have_content("Item Name: #{invoice_item2.item.name}")
+      within "#invoice-item-table" do
+        expect(page).to have_content("#{invoice_item1.item.name}")
+        expect(page).to have_content("#{invoice_item1.quantity}")
+        expect(page).to have_content("$6.00")
+        expect(page).to have_content("#{invoice_item1.status.titleize}")
+        expect(page).to_not have_content("#{invoice_item2.item.name}")
       end
   end
 
@@ -76,9 +78,9 @@ RSpec.describe 'merchant_invoices show page' do
 
       visit merchant_invoice_path(merch1.id, invoice1.id)
 
-      within "#invoice-item-total-revenue" do
-        expect(page).to have_content("Total Revenue: $42.00")
-        expect(page).to_not have_content("Total Revenue: $50.00")
+      within "#total-revenue" do
+        expect(page).to have_content("Total Pre-Discounts: $42.00")
+        expect(page).to_not have_content("Total Pre-Discounts: $50.00")
       end
   end
 
@@ -99,13 +101,13 @@ RSpec.describe 'merchant_invoices show page' do
 
       visit merchant_invoice_path(merch1.id, invoice1.id)
 
-      within "#invoice-item-information" do
-        expect(page).to have_content("Item Name: #{invoice_item1.item.name}")
-        expect(page).to_not have_content("Item Name: #{invoice_item2.item.name}")
-        expect(page).to have_content("pending")
-        select("shipped", from: "Status")
+      within "#invoice-item-table" do
+        expect(page).to have_content("#{invoice_item1.item.name}")
+        expect(page).to_not have_content("#{invoice_item2.item.name}")
+        expect(page).to have_content("Pending")
+        select("Shipped", from: "Status")
         click_button "Update Item Status"
-        expect(page).to have_content("shipped")
+        expect(page).to have_content("Shipped")
       end
   end
 
@@ -128,7 +130,7 @@ RSpec.describe 'merchant_invoices show page' do
     visit merchant_invoice_path(merchant1.id, invoice1.id)
 
 
-    expect(page).to have_content("Total Revenue: $135.00")
+    expect(page).to have_content("Total Pre-Discounts: $135.00")
 
   end
 
@@ -153,7 +155,7 @@ RSpec.describe 'merchant_invoices show page' do
     
     visit merchant_invoice_path(merchant1.id, invoice1.id)
 
-    within "#after-discounts" do
+    within "#revenue-after-discounts" do
       expect(page).to have_content("After Discounts: $260.00")
     end
   end
