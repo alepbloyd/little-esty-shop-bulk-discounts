@@ -1,10 +1,26 @@
-<h1><%= @merchant.name %> Invoice Index Page</h1>
+<div id="page-banner">
+  <div id="page-details">
+    <%=@merchant.name%>
+  </div>
 
-<div id="merchant-invoice-index">
-    <% @merchant.invoices.distinct.each do |invoice| %>
-        <div id="invoice-id-<%= invoice.id %>">
-            <li><%= link_to "Invoice ID: #{invoice.id}", merchant_invoice_path(@merchant, invoice) %></li>
-        </div>
-    <% end %>
+  <div id="merchant-links">
+    <%= link_to "Dashboard", "/merchants/#{@merchant.id}", class: "dashboard-link"%>
+    <%= link_to 'My Items', "/merchants/#{@merchant.id}/items",class: "items-link" %>
+    <%= link_to 'My Invoices', "/merchants/#{@merchant.id}/invoices",class: "invoices-link" %>
+    <%= link_to 'Bulk Discounts', "/merchants/#{@merchant.id}/bulk_discounts",class: "bulk-discount-link"%>
+  </div>
 </div>
 
+<div id="content-center-title">
+    My Invoices
+</div>
+
+<div id="dashboard-content-left">
+    <ul id="merchant-invoice-index">
+        <% @merchant.invoices.distinct.each do |invoice| %>
+            <div id="invoice-id-<%= invoice.id %>">
+                <li><%= link_to "Invoice ID: #{invoice.id}", merchant_invoice_path(@merchant, invoice) %></li>
+            </div>
+        <% end %>
+    </ul>
+</div>
