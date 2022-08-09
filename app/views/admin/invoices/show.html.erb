@@ -1,38 +1,70 @@
-<h1>Admin Invoices Show Page</h1>
-
-<div id="invoice-attributes">
-  <p>Invoice ID: <%= @invoice.id %></p>
-  <p>Invoice Status: <%= @invoice.status %></p>
-  <p>Created At: <%= @invoice.formatted_date %></p>
-  <p>Customer Name: <%= @invoice.customer_name %></p>
-</div>
-
-<h3> Invoice Item Information </h3>
-
-<% @invoice.invoice_items.each do |invoice_item| %>
-  <div id="invoice-item-<%= invoice_item.id %>">
-    <p>Item Name: <%= invoice_item.item.name %></p>
-    <p>Quantity: <%= invoice_item.quantity %></p>
-    <p>Price: <%= number_to_currency(invoice_item.unit_price) %></p>
-    <p>Status: <%= invoice_item.status %></p>
+<div id="page-banner">
+  <div id="page-details">
+    Admin Invoices
   </div>
-<% end %>
-
-  
-<div id="total-revenue">
-  <h3>Total Revenue: <%= number_to_currency(@invoice.total_revenue) %></h3>
+  <div id="admin-links">
+    <%= link_to 'Dashboard', '/admin', class: "dashboard-link" %>
+    <%= link_to 'Merchants', '/admin/merchants', class: "merchants-link" %>
+    <%= link_to 'Invoices', '/admin/invoices', class: "invoices-link" %>
+  </div>
 </div>
 
-<div id="revenue-after-discounts">
-  <h3>
-    Revenue After Discounts: <%= number_to_currency(@invoice.total_after_discounts)%>
-  </h3>
+<div id="content-center-title">
+  Invoice #<%= @invoice.id%>
 </div>
 
-<div id="update-status">
-  <%= form_with url: "/admin/invoices/#{@invoice.id}", method: :patch, local: true do |f| %>
-    <%= f.label :status %>
-    <%= f.select :status, ['cancelled', 'in progress', 'completed'] %>
-    <%= f.submit "Update Status" %>
+<div id="dashboard-content-single-column">
+
+  <div id="update-status">
+    <%= form_with url: "/admin/invoices/#{@invoice.id}", method: :patch, local: true do |f| %>
+      <%= f.label :status %>
+      <%= f.select :status, options_for_select(["In Progress", "Cancelled","Completed"],{selected: @invoice.status.titleize}) %>
+      <%= f.submit "Update Status" %>
+    <% end %>
+  </div>
+
+  <div id="invoice-attributes">
+    <div id="invoice-status">
+      <b>Invoice Status:</b> <%= @invoice.status.titleize %>
+    </div>
+
+    <div id="invoice-date-created">
+      <b>Created On:</b> <%= @invoice.formatted_date %>
+    </div>
+
+    <div id="total-revenue">
+      <b>Total Pre-Discounts:</b> <%= number_to_currency(@invoice.total_revenue) %>
+    </div>
+
+    <div id="revenue-after-discounts">
+      <b>Revenue After Discounts:</b> <%= number_to_currency(@invoice.total_after_discounts)%>
+    </div>
+  </div>
+
+  <div id="customer-attributes">
+    <div class="customer-attributes-title"> 
+      Customer: 
+    </div>
+    <div class="customer-attribute">
+      <%=@invoice.customer_name%>
+    </div>
+  </div>
+</div>
+
+<table id="invoice-item-table">
+  <tr>
+    <th>Item Name</th>
+    <th>Quantity</th>
+    <th>Unit Price</th>
+    <th>Status</th>
+  </tr>
+
+  <% @invoice.invoice_items.each do |invoice_item| %>
+    <tr id="invoice-item-<%= invoice_item.id %>">
+      <td><%= invoice_item.item.name %></td>
+      <td><%= invoice_item.quantity %></td>
+      <td><%= number_to_currency(invoice_item.unit_price) %></td>
+      <td><%= invoice_item.status.titleize %></td>
+    </tr>
   <% end %>
-</div>
+</table>

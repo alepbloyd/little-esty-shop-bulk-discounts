@@ -45,10 +45,12 @@ RSpec.describe 'admin invoices show page' do
     visit "/admin/invoices/#{@invoice1.id}"
 
     within '#invoice-attributes' do
-      expect(page).to have_content("Invoice ID: #{@invoice1.id}")
-      expect(page).to have_content("Invoice Status: #{@invoice1.status}")
-      expect(page).to have_content('Created At: Tuesday, July 26, 2022')
-      expect(page).to have_content('Customer Name: Red Trainer')
+      expect(page).to have_content("Invoice Status: #{@invoice1.status.titleize}")
+      expect(page).to have_content('Created On: Tuesday, July 26, 2022')
+    end
+
+    within "#customer-attributes" do
+      expect(page).to have_content("Red Trainer")
     end
   end
 
@@ -56,17 +58,17 @@ RSpec.describe 'admin invoices show page' do
     visit "/admin/invoices/#{@invoice1.id}"
 
     within "#invoice-item-#{@invoice_item1.id}" do
-      expect(page).to have_content("Item Name: #{@invoice_item1.item.name}")
-      expect(page).to have_content("Quantity: #{@invoice_item1.quantity}")
-      expect(page).to have_content("Price: $8.00")
-      expect(page).to have_content("Status: #{@invoice_item1.status}")
+      expect(page).to have_content("#{@invoice_item1.item.name}")
+      expect(page).to have_content("#{@invoice_item1.quantity}")
+      expect(page).to have_content("$8.00")
+      expect(page).to have_content("#{@invoice_item1.status.titleize}")
     end
 
     within "#invoice-item-#{@invoice_item2.id}" do
-      expect(page).to have_content("Item Name: #{@invoice_item2.item.name}")
-      expect(page).to have_content("Quantity: #{@invoice_item2.quantity}")
-      expect(page).to have_content("Price: $5.00")
-      expect(page).to have_content("Status: #{@invoice_item2.status}")
+      expect(page).to have_content("#{@invoice_item2.item.name}")
+      expect(page).to have_content("#{@invoice_item2.quantity}")
+      expect(page).to have_content("$5.00")
+      expect(page).to have_content("#{@invoice_item2.status.titleize}")
     end
   end
 
@@ -74,7 +76,7 @@ RSpec.describe 'admin invoices show page' do
     visit "/admin/invoices/#{@invoice1.id}"
 
     within '#total-revenue' do
-      expect(page).to have_content('Total Revenue: $26.00')
+      expect(page).to have_content('Total Pre-Discounts: $26.00')
     end
   end
 
@@ -82,12 +84,12 @@ RSpec.describe 'admin invoices show page' do
     visit "/admin/invoices/#{@invoice1.id}"
 
     within '#update-status' do
-      expect(page).to have_content('completed')
+      expect(page).to have_content('Completed')
 
-      select 'cancelled', from: 'Status'
+      select 'Cancelled', from: 'Status'
       click_on 'Update Status'
 
-      expect(page).to have_content('cancelled')
+      expect(page).to have_content('Cancelled')
     end
   end
 

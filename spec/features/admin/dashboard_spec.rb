@@ -4,7 +4,7 @@ RSpec.describe 'Admin Dashboard page' do
   it 'has a header showing Admin Dashboard' do
     visit admin_index_path
 
-    within('#admin-header') do
+    within('#page-details') do
       expect(page).to have_content("Admin Dashboard")
     end
   end
