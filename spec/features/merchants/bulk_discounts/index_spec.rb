@@ -45,7 +45,7 @@ RSpec.describe 'merchant bulk discount index' do
     visit merchant_bulk_discounts_path(merchant1.id)
 
     within "#bulk-discount-#{bulk_discount1.id}" do
-      click_on "View Bulk Discount Details"
+      click_on "Details"
     end
 
     expect(current_path).to eq("/merchants/#{merchant1.id}/bulk_discounts/#{bulk_discount1.id}")
@@ -73,7 +73,7 @@ RSpec.describe 'merchant bulk discount index' do
     visit merchant_bulk_discounts_path(merchant1.id)
 
     within "#bulk-discount-#{bulk_discount1.id}" do
-      click_on "Delete Discount"
+      click_on "Delete"
     end
 
     expect(current_path).to eq(merchant_bulk_discounts_path(merchant1.id))
