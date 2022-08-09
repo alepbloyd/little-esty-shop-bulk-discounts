@@ -1,43 +1,85 @@
-<h1>Invoice Show Page</h1>
+<div id="page-banner">
+  <div id="page-details">
+	<%=@merchant.name%>
+  </div>
 
-<div id="invoice-details">
-    <p>ID: <%= @invoice.id %></p>
-    <p>Status: <%= @invoice.status %></p>
-    <p>Created: <%= @invoice.formatted_date %></p>  
-    <p>Customer: <%= @invoice.customer_name %></p><br>
+  <div id="merchant-links">
+	<%= link_to "Dashboard", "/merchants/#{@merchant.id}", class: "dashboard-link"%>
+	<%= link_to 'My Items', "/merchants/#{@merchant.id}/items",class: "items-link" %>
+	<%= link_to 'My Invoices', "/merchants/#{@merchant.id}/invoices",class: "invoices-link" %>
+	<%= link_to 'Bulk Discounts', "/merchants/#{@merchant.id}/bulk_discounts",class: "bulk-discount-link"%>
+  </div>
 </div>
 
-<div id="invoice-item-information">
-    <% @invoice.invoice_items.each do |invoice_item|%>
-        <div id="invoice-item-<%=invoice_item.id%>">
-            <h3><%="Item Name: #{invoice_item.item.name}"%></h3>
-            <p><%="Quantity Ordered: #{invoice_item.quantity}"%></p>
-            <p><%="Price: #{number_to_currency(invoice_item.unit_price)}"%></p>
-            <p>
-                <% if invoice_item.best_discount.nil? %>
-                    No bulk discount applicable.
-                <% else %>
-                    <%=link_to "Bulk Discount Applied", "/merchants/#{@merchant.id}/bulk_discounts/#{invoice_item.best_discount.id}"%>
-                <% end %>
-            </p>
-            <p><%="Status: #{invoice_item.status}"%></p>
-
-            <%= form_with url: "/merchants/#{@merchant.id}/invoices/#{@invoice.id}", method: :patch, local: true do |form| %>
-                <%= form.label :status %>
-                <%= form.select :status, ['pending', 'packaged', 'shipped'] %>
-                <%= form.hidden_field :invoice_item_id, value: invoice_item.id  %>
-                <%= form.submit "Update Item Status" %>
-            <% end %>
-            </div>
-    <% end %>
+<div id="content-center-title">
+	Invoice #<%=@invoice.id%>
 </div>
 
-<div id="invoice-item-total-revenue">
-    <p>Total Revenue: <%= number_to_currency(@invoice.total_revenue) %></p><br>
+<div id="dashboard-content-single-column">
+  <div id="invoice-attributes">
+	<div id="invoice-status">
+	  <b>Invoice Status:</b> <%= @invoice.status.titleize %>
+	</div>
+
+	<div id="invoice-date-created">
+	  <b>Created On:</b> <%= @invoice.formatted_date %>
+	</div>
+
+	<div id="total-revenue">
+	  <b>Total Pre-Discounts:</b> <%= number_to_currency(@invoice.total_revenue) %>
+	</div>
+
+	<div id="revenue-after-discounts">
+	  <b>Revenue After Discounts:</b> <%= number_to_currency(@invoice.total_after_discounts)%>
+	</div>
+  </div>
+
+  <div id="customer-attributes">
+	<div class="customer-attributes-title"> 
+	  Customer: 
+	</div>
+	<div class="customer-attribute">
+	  <%=@invoice.customer_name%>
+	</div>
+  </div>
 </div>
 
-<div id="after-discounts">
-    <p> 
-        After Discounts: <%= number_to_currency(@invoice.total_after_discounts)%>
-    </p>
-</div>
+<table id="invoice-item-table">
+	<tr>
+		<th>Item Name</th>
+		<th>Quantity</th>
+		<th>Unit Price</th>
+		<th>Bulk Discount</th>
+		<th>Status</th>
+	</tr>
+	<% @invoice.invoice_items.each do |invoice_item|%>
+		<tr id="invoice-item-<%=invoice_item.id%>">
+			<td> <%=invoice_item.item.name%> </td>
+			<td> <%=invoice_item.quantity%> </td>
+			<td> <%=number_to_currency(invoice_item.unit_price)%> </td>
+			<td>
+				<% if invoice_item.best_discount.nil? %>
+					No bulk discount applicable.
+				<% else %>
+					<%=link_to "Bulk Discount Applied", "/merchants/#{@merchant.id}/bulk_discounts/#{invoice_item.best_discount.id}"%>
+					<br><br>
+					<%="#{invoice_item.best_discount.percent_discount}% off orders of over #{invoice_item.best_discount.quantity_threshold} items." %>
+				<% end %>
+			</td>
+			<td>
+				<div>
+					<%=invoice_item.status.titleize%>
+				</div>
+				<br>
+				<div>
+					<%= form_with url: "/merchants/#{@merchant.id}/invoices/#{@invoice.id}", method: :patch, local: true do |form| %>
+						<%= form.label :status %>
+						<%= form.select :status, options_for_select(["Pending","Packaged","Shipped"],{selected: invoice_item.status.titleize})%>
+						<%= form.hidden_field :invoice_item_id, value: invoice_item.id  %>
+						<%= form.submit "Update Item Status" %>
+					<% end %>
+				</div>
+			</td>
+		</tr>
+	<% end %>
+</table>
