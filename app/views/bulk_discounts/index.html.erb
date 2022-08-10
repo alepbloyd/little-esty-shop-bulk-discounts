@@ -26,6 +26,9 @@
           <div class="bulk-discount">
             <div id="bulk-discount-<%=discount.id%>">
               <p>
+                <b>Bulk Discount</b>
+              </p>
+              <p>
                 Percent Discount: <%=discount.percent_discount%>%
               </p>
               <p>
@@ -34,6 +37,27 @@
                 <%= link_to "Details", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", class: "bulk-discount-show-button"%>
 
                 <%= link_to "Delete", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", method: :delete, class: "bulk-discount-delete-button"%>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div id="holiday-discount-list">
+        <% @merchant.holiday_discounts.each do |discount|%>
+          <div class="holiday-discount">
+            <div id="holiday-discount-<%=discount.id%>">
+              <p>
+                <b>Holiday Discount</b>
+              </p>
+              <p>
+                <%=discount.holiday_name.titleize%> Discount 
+              </p>
+              <p>
+                Percent Discount: <%=discount.percent_discount%>%
+              </p>
+              <p>
+                Quantity Threshold: <%=discount.quantity_threshold%>
+              </p>
             </div>
           </div>
         <% end %>
@@ -50,12 +74,14 @@
         <th>Order</th>
         <th>Name</th>
         <th>Date</th>
+        <th>Discount</th>
       </tr>
     <%@holiday_search.holiday_information.each_with_index do |holiday,index|%>
       <tr id="upcoming-holiday-<%=index+1%>">
         <td><%=index+1%></td>
         <td><%=holiday.name%></td>
         <td><%=holiday.date%></td>
+        <td><%=link_to "New Discount",new_merchant_holiday_discount_path(@merchant, :holiday_name => holiday.name)%></td>
       </tr>
     <% end %>
     </table>

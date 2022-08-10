@@ -6,6 +6,7 @@ RSpec.describe Merchant do
     it { should have_many(:invoice_items).through(:items)}
     
     it { should have_many :bulk_discounts}
+    it { should have_many :holiday_discounts}
   end
 
   describe 'instance methods' do
@@ -119,21 +120,6 @@ RSpec.describe Merchant do
         merchant.name
       end
       expected = [merchant1, merchant2, merchant3].map do |merchant|
-        merchant.name
-      end
-
-      expect(actual).to eq(expected)
-    end
-    it 'disabled_merchants returns all merchants with status 0 (Disabled)' do
-      merchant1 = Merchant.create!(name: 'Potions and Things', status: 'Enabled')
-      merchant2 = Merchant.create!(name: 'Wands and Wigs', status: 'Disabled')
-      merchant3 = Merchant.create!(name: 'Berties Beans', status: 'Disabled')
-      merchant4 = Merchant.create!(name: 'Butterbeer Superstore', status: 'Disabled')
-
-      actual = Merchant.disabled_merchants.map do |merchant|
-        merchant.name
-      end
-      expected = [merchant2, merchant3, merchant4].map do |merchant|
         merchant.name
       end
 
