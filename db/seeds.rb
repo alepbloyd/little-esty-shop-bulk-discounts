@@ -53,5 +53,5 @@ end
 end
 
 @merchants.each do |merchant|
-  @holiday_discounts << HolidayDiscount.create(holiday_name: "Christmas", percent_discount: 30, quantity_threshold: 2, merchant_id: merchant.id)git 
+  @holiday_discounts << HolidayDiscount.create(holiday_name: "Christmas", percent_discount: 30, quantity_threshold: 2, merchant_id: merchant.id) 
 end
