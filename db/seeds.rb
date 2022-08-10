@@ -9,12 +9,13 @@ require 'factory_bot_rails'
 include FactoryBot::Syntax::Methods
 
 
-@bulk_discounts = []
+@bulk_discounts = [] #
+@holiday_discounts = []
 @customers = [] #
 @invoice_items = [] #
 @invoices = [] #
 @items = [] #
-@transactions = []
+@transactions = [] #
 @merchants = [] #
 
 
@@ -49,4 +50,8 @@ end
   @bulk_discounts << FactoryBot.create(:bulk_discount, merchant_id: merchant.id, percent_discount: 20, quantity_threshold: 10)
 
   @bulk_discounts << FactoryBot.create(:bulk_discount, merchant_id: merchant.id, percent_discount: 50, quantity_threshold: 30)
+end
+
+@merchants.each do |merchant|
+  @holiday_discounts << HolidayDiscount.create(holiday_name: "Christmas", percent_discount: 30, quantity_threshold: 2, merchant_id: merchant.id)
 end
