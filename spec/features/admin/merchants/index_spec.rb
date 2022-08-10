@@ -149,7 +149,6 @@ RSpec.describe 'admin merchants index page' do
       expect(page).to have_content('Trader Joes')
       expect(page).to have_content('Disabled')
       expect(page).to have_button('Enable')
-      click_on('Enable')
     end
 
     expect(current_path).to eq(admin_merchants_path)

@@ -112,4 +112,20 @@ RSpec.describe 'merchant bulk discount index' do
       expect(page).to have_content("2022-11-11")
     end
   end
+
+  it "has a 'create discount' button next to each upcoming holiday" do
+    merchant1 = Merchant.create!(name: "Snake Shop")
+
+      bulk_discount1 = BulkDiscount.create!(percent_discount: 10, quantity_threshold: 5, merchant_id: merchant1.id)
+      bulk_discount2 = BulkDiscount.create!(percent_discount: 20, quantity_threshold: 10, merchant_id: merchant1.id)
+      bulk_discount3 = BulkDiscount.create!(percent_discount: 30, quantity_threshold: 15, merchant_id: merchant1.id)
+
+    visit merchant_bulk_discounts_path(merchant1.id)
+
+    within "#upcoming-holiday-1" do
+      click_on "New Discount"
+    end
+
+    expect(current_path).to eq(new_merchant_holiday_discount_path(merchant1))
+  end
 end

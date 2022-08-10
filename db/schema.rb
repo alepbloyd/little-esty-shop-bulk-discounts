@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_05_012510) do
+ActiveRecord::Schema.define(version: 2022_08_10_015919) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,16 @@ ActiveRecord::Schema.define(version: 2022_08_05_012510) do
     t.string "last_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "holiday_discounts", force: :cascade do |t|
+    t.string "holiday_name"
+    t.integer "percent_discount", default: 30
+    t.integer "quantity_threshold", default: 2
+    t.bigint "merchant_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["merchant_id"], name: "index_holiday_discounts_on_merchant_id"
   end
 
   create_table "invoice_items", force: :cascade do |t|
@@ -78,5 +88,6 @@ ActiveRecord::Schema.define(version: 2022_08_05_012510) do
   end
 
   add_foreign_key "bulk_discounts", "merchants"
+  add_foreign_key "holiday_discounts", "merchants"
   add_foreign_key "items", "merchants"
 end

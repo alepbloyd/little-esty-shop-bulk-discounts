@@ -1,0 +1,12 @@
+<h1> New Holiday Discount Page </h1>
+
+Discount Name: <%=@holiday_name%> Discount
+
+<%= form_with url: "/merchants/#{@merchant.id}/holiday_discounts",method: :post, class: "holiday_discount_form" do |form|%>
+  <%=form.label :percent_discount, "Percent Discount" %>
+  <%=form.number_field :percent_discount, value: 30%>
+  <%=form.label :quantity_threshold, "Quantity Threshold" %>
+  <%=form.number_field :quantity_threshold, value: 2%>
+  <%=form.hidden_field :holiday_name, value: @holiday_name%>
+  <%=form.submit "Submit" %>
+<% end %>
