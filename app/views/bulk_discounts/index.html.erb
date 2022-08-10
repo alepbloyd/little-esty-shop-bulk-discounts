@@ -43,23 +43,27 @@
       </div>
 
       <div id="holiday-discount-list">
-        <% @merchant.holiday_discounts.each do |discount|%>
-          <div class="holiday-discount">
-            <div id="holiday-discount-<%=discount.id%>">
-              <p>
-                <b>Holiday Discount</b>
-              </p>
-              <p>
-                <%=discount.holiday_name.titleize%> Discount 
-              </p>
-              <p>
-                Percent Discount: <%=discount.percent_discount%>%
-              </p>
-              <p>
-                Quantity Threshold: <%=discount.quantity_threshold%>
-              </p>
+        <% if @merchant.holiday_discounts.nil? == true %>
+          No Holiday Discounts Created
+        <% else %>
+          <% @merchant.holiday_discounts.each do |discount|%>
+            <div class="holiday-discount">
+              <div id="holiday-discount-<%=discount.id%>">
+                <p>
+                  <b>Holiday Discount</b>
+                </p>
+                <p>
+                  <%=discount.holiday_name.titleize%> Discount 
+                </p>
+                <p>
+                  Percent Discount: <%=discount.percent_discount%>%
+                </p>
+                <p>
+                  Quantity Threshold: <%=discount.quantity_threshold%>
+                </p>
+              </div>
             </div>
-          </div>
+          <% end %>
         <% end %>
       </div>
     </div>
