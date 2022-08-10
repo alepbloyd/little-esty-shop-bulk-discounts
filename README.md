@@ -12,6 +12,7 @@ This project demonstrates a fictious e-commerce platform where merchants and adm
 
 ## Database Design
 
+![image](https://user-images.githubusercontent.com/17027357/183792299-98c54b50-6eac-49e1-82d9-729083d8db7b.png)
 
 ## Concepts Demonstrated
 
